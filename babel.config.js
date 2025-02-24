@@ -10,6 +10,7 @@ module.exports = {
           tests: ['./tests/'],
           '@navigations': './src/navigators',
           '@screens': './src/screens',
+          '@core': './src/core',
         },
       },
    ],

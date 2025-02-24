@@ -6,6 +6,7 @@
       "*": ["src/*"],
       "@navigation/*": ["src/navigators/*"],
       "@screens/*": ["src/screens/*"],
+      "@core/*": ["src/core/*"],
     },
   }
 }
