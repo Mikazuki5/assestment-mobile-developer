@@ -1,11 +1,12 @@
+import { Layout } from 'components';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text } from 'react-native';
 
 const HomeScreen = () => {
   return (
-    <View>
-      <Text style={{color: 'red'}}>tes</Text>
-    </View>
+    <Layout>
+      <Text>tets</Text>
+    </Layout>
   );
 };
 
