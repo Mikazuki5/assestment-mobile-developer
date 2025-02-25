@@ -24,7 +24,7 @@ const ListCategoriesComponent = ({
 }: {
   data: IResponseApiJokeListCategories | undefined;
   selectedAlias: string;
-  handleSelect: (values: string) => void;
+  handleSelect: (values: string, index: number) => void;
   onRefresh: () => void;
   isLoading: boolean;
 }) => {
@@ -57,7 +57,7 @@ const RenderList = ({
   item: IValuesList;
   index: number;
   itemSelected: string;
-  handleSelectAlias: (values: string) => void;
+  handleSelectAlias: (values: string, index: number) => void;
 }) => {
   const isSelected = itemSelected === item.alias;
   return (
@@ -67,9 +67,10 @@ const RenderList = ({
           style={[
             styles.cardHeaderItemsWrapper,
             {
-              flex: 0.1,
+              flex: 0,
               justifyContent: 'center',
               alignItems: 'center',
+              marginRight: 10,
             },
           ]}>
           <Text style={styles.cardHeaderItemsValues}>{index + 1}</Text>
@@ -78,7 +79,8 @@ const RenderList = ({
           <Text style={styles.cardHeaderItemsTitle}>{item.resolved}</Text>
           <Text style={styles.cardHeaderItemsValues}>{item.alias}</Text>
         </View>
-        <View
+       {index === 0 && (
+         <View
           style={[
             styles.cardHeaderItemsWrapper,
             {
@@ -95,12 +97,13 @@ const RenderList = ({
             Top
           </Text>
         </View>
+       )}
         <Pressable
           style={[
             styles.cardHeaderItemsWrapper,
             {flex: 0, justifyContent: 'center'},
           ]}
-          onPress={() => handleSelectAlias(item.alias)}>
+          onPress={() => handleSelectAlias(item.alias, index)}>
           <Animated.View
             style={{
               transform: [{rotate: isSelected ? '90deg' : '0deg'}],

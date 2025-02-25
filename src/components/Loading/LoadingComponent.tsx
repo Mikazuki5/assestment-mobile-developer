@@ -1,15 +1,19 @@
 import React from 'react';
-import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 const LoadingComponent = ({isVisible, loadingColor = 'blue', size = 'small'}: {isVisible: boolean; loadingColor?: string; size?: number | 'small' | 'large' | undefined}) => {
+  if (!isVisible) {
+    return;
+  }
   return (
-    <Modal visible={isVisible} transparent>
+    // eslint-disable-next-line react-native/no-inline-styles
+    <View style={{ backgroundColor: 'transparent', flex: 1, position: 'absolute', height: '100%', width: '100%'}}>
       <View style={styles.loadingContainer}>
         <View style={styles.loadingCardWrapper}>
           <ActivityIndicator size={size} color={loadingColor} />
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };
 export default LoadingComponent;

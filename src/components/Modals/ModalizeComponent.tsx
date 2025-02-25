@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useRef } from 'react';
 import { Animated, Modal, Pressable, StyleSheet } from 'react-native';
@@ -20,8 +21,10 @@ const ModalizeComponent = ({ visible, onClose, renderComponent }: {visible: bool
     }
   }, [visible]);
 
+  if (!visible) return;
+
   return (
-    <Modal visible={visible} onRequestClose={onClose} transparent animationType="fade">
+    <Modal visible={visible} transparent animationType="fade">
       <Pressable style={styles.backgroundContainer} onPress={onClose} />
       <Animated.View style={[styles.cardModalBottomWrapper, { transform: [{ translateY }] }]}>
         {renderComponent}
@@ -40,7 +43,7 @@ const styles = StyleSheet.create({
   cardModalBottomWrapper: {
     position: 'absolute',
     bottom: 0,
-    height: '40%',
+    height: '90%',
     backgroundColor: '#FFF',
     width: '100%',
     borderTopLeftRadius: 16,

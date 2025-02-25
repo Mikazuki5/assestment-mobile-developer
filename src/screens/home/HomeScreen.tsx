@@ -1,36 +1,34 @@
-import {useIsFocused} from '@react-navigation/native';
 import {Layout, Loading, Modalize} from 'components';
-import {useGetJokeListCategories} from 'hooks/useGetJokeListCategories';
-import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import React from 'react';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import Config from 'react-native-config';
 import ListCategoriesComponent from './components/ListCategoriesComponent';
+import ListDetailCategories from './components/ListDetailCategoriesComponent';
+import { useHome } from './hooks/useHomes';
 
 const HomeScreen = () => {
-  const isFocussed = useIsFocused();
-
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
-  const [selectedAlias, setSelectedAlias] = useState<string | null>(null);
-
-  const handleSelect = (alias: string) => {
-    setSelectedAlias(prev => (prev === alias ? null : alias));
-    setIsOpenModal(!isOpenModal);
-  };
-
   const {
     data,
-    isFetching: isLoading,
-    refetch: refetchListCategories,
-  } = useGetJokeListCategories({
-    isFocused: isFocussed,
-  });
+    dataDetailCategories,
+    isLoading,
+    isLoadingFetchDetailCategories,
+    refetchListCategories,
+    refetchGetDetail,
+    setAmount,
+    isFirstList,
+    amount,
+    handleSelect,
+    key,
+    selectedAlias,
+    isOpenModal,
+    setIsOpenModal,
+    setSelectedAlias,
+    setIsFirstList,
+    queryClient,
+  } = useHome();
 
   return (
-    <Layout bgColors="#F4F5F6">
+    <Layout bgColors="#F4F5F6" key={key}>
       <View style={styles.Container}>
         <Text style={styles.titleWrapper}>{Config.ASSESTMENT_FROM}</Text>
         <ListCategoriesComponent
@@ -42,18 +40,39 @@ const HomeScreen = () => {
         />
       </View>
       <Modalize
-        visible={isOpenModal}
+        visible={!isLoadingFetchDetailCategories && isOpenModal}
         onClose={() => {
           setIsOpenModal(!isOpenModal);
-          setSelectedAlias('');
+          setSelectedAlias(null);
+
+          queryClient.removeQueries({queryKey: ['useGetDetailListByCategories']});
+          setAmount(2);
         }}
         renderComponent={
-          <View>
-            <Text>Test</Text>
-          </View>
+          <ListDetailCategories
+            amount={amount}
+            isLoading={isLoadingFetchDetailCategories}
+            isFirstList={isFirstList}
+            data={dataDetailCategories}
+            handleSelect={(values) => Alert.alert(values)}
+            handlePressPagination={async() => {
+              setAmount(amount + 2);
+              setTimeout(() => {
+                refetchGetDetail();
+              },10);
+            }}
+            handlePressToTop={() => {
+              setAmount(2);
+              setSelectedAlias(data?.categoryAliases[0].alias ?? null);
+              setIsFirstList(true);
+              setTimeout(() => {
+                refetchGetDetail();
+              },10);
+            }}
+          />
         }
       />
-      <Loading isVisible={isLoading} />
+      <Loading isVisible={isLoading || isLoadingFetchDetailCategories} />
     </Layout>
   );
 };
